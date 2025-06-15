@@ -1,28 +1,35 @@
+export interface Pet {
+  _id: string;
+  name: string;
+  type: string;
+  breed?: string;
+  age?: number;
+  owner: string;
+}
+
 export interface Reminder {
-  id: string;
-  pet: string;
-  category: 'General' | 'Lifestyle' | 'Health';
+  _id: string;
   title: string;
+  pet: Pet;
+  category: 'General' | 'Lifestyle' | 'Health';
   notes?: string;
-  startDateTime: Date;
-  frequency: 'Daily' | 'Weekly';
-  isCompleted: boolean;
-  completedAt?: Date;
+  startDate: string;
+  frequency: 'Daily' | 'Weekly' | 'Monthly' | 'Custom';
+  timeSlot: 'Morning' | 'Afternoon' | 'Evening' | 'Night';
+  status: 'Pending' | 'Completed';
   streak: number;
-  createdAt: Date;
-  updatedAt: Date;
+  lastCompleted?: string;
 }
 
 export interface ReminderFormData {
-  pet: string;
-  category: 'General' | 'Lifestyle' | 'Health';
   title: string;
+  petId: string;
+  category: 'General' | 'Lifestyle' | 'Health';
   notes?: string;
   startDateTime: Date;
-  frequency: 'Daily' | 'Weekly';
+  frequency: 'Daily' | 'Weekly' | 'Monthly' | 'Custom';
+  timeSlot: 'Morning' | 'Afternoon' | 'Evening' | 'Night';
 }
-
-export type TimeSlot = 'Morning' | 'Afternoon' | 'Evening';
 
 export interface GroupedReminders {
   Morning: Reminder[];

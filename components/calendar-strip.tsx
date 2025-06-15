@@ -32,7 +32,7 @@ export function CalendarStrip() {
     const reminders = getFilteredReminders();
     return reminders.filter(
       (reminder) =>
-        format(reminder.startDateTime, "yyyy-MM-dd") ===
+        format(new Date(reminder.startDate), "yyyy-MM-dd") ===
         format(date, "yyyy-MM-dd")
     );
   };

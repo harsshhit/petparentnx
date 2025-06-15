@@ -17,7 +17,7 @@ import { format } from "date-fns";
 interface ReminderCardProps {
   reminder: Reminder;
   onEdit: (reminder: Reminder) => void;
-  onDelete: (id: string) => void;
+  onDelete: (id: string, title: string) => void;
 }
 
 const categoryColors = {
@@ -43,7 +43,7 @@ export function ReminderCard({
   const { toggleReminderComplete } = useReminderStore();
 
   const handleToggleComplete = () => {
-    toggleReminderComplete(reminder.id);
+    toggleReminderComplete(reminder._id);
   };
 
   return (
@@ -54,7 +54,7 @@ export function ReminderCard({
       exit={{ opacity: 0, x: -100 }}
       whileHover={{ scale: 1.02 }}
       className={`bg-white dark:bg-gray-800 rounded-xl border-2 p-4 shadow-sm transition-all duration-200 ${
-        reminder.isCompleted
+        reminder.lastCompleted
           ? "border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-900/20"
           : "border-gray-100 dark:border-gray-700 hover:border-teal-200 dark:hover:border-teal-700 hover:shadow-md"
       }`}
@@ -75,13 +75,13 @@ export function ReminderCard({
               variant="outline"
               className="text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 border-gray-200 dark:border-gray-600"
             >
-              {reminder.pet}
+              {reminder.pet.name}
             </Badge>
           </div>
 
           <h3
             className={`font-semibold text-gray-900 dark:text-gray-100 mb-2 truncate ${
-              reminder.isCompleted
+              reminder.lastCompleted
                 ? "line-through text-gray-500 dark:text-gray-400"
                 : ""
             }`}
@@ -95,18 +95,21 @@ export function ReminderCard({
             </p>
           )}
 
-          <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
-            <div className="flex items-center gap-1.5">
+          <div className="flex flex-wrap items-center gap-3 mt-4 pt-3 border-t border-gray-100 dark:border-gray-700">
+            <div className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400">
               <Clock className="h-4 w-4" />
-              <span>{format(reminder.startDateTime, "h:mm a")}</span>
+              <span>{format(reminder.startDate, "h:mm a")}</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
+              <span className="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full text-gray-700 dark:text-gray-300">
                 {reminder.frequency}
               </span>
             </div>
+            <div className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400">
+              <span className="font-medium">{reminder.pet.name}</span>
+            </div>
             {reminder.streak > 0 && (
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5 ml-auto">
                 <Flame className="h-4 w-4 text-orange-500" />
                 <span className="font-medium text-orange-600 dark:text-orange-400">
                   {reminder.streak}
@@ -122,12 +125,12 @@ export function ReminderCard({
             size="sm"
             onClick={handleToggleComplete}
             className={`h-8 w-8 p-0 rounded-full ${
-              reminder.isCompleted
+              reminder.lastCompleted
                 ? "text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300"
                 : "text-gray-400 hover:text-teal-600 dark:text-gray-500 dark:hover:text-teal-400"
             }`}
           >
-            {reminder.isCompleted ? (
+            {reminder.lastCompleted ? (
               <CheckCircle2 className="h-5 w-5" />
             ) : (
               <Circle className="h-5 w-5" />
@@ -152,7 +155,7 @@ export function ReminderCard({
                 Edit
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => onDelete(reminder.id)}
+                onClick={() => onDelete(reminder._id, reminder.title)}
                 className="text-red-600 dark:text-red-400 cursor-pointer"
               >
                 Delete

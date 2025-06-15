@@ -22,7 +22,7 @@ export function FilterBar() {
   } = useReminderStore();
 
   // Get unique pets and categories from reminders
-  const uniquePets = Array.from(new Set(reminders.map((r) => r.pet)));
+  const uniquePets = Array.from(new Set(reminders.map((r) => r.pet.name)));
   const categories = ["General", "Lifestyle", "Health"];
 
   const clearFilters = () => {
