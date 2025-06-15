@@ -4,10 +4,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Plus } from "lucide-react";
 import { ReminderCard } from "./reminder-card";
 import { Button } from "@/components/ui/button";
-import { Reminder, TimeSlot } from "@/types/reminder";
+import { Reminder } from "@/types/reminder";
 
 interface TimeSectionProps {
-  title: TimeSlot;
+  title: string;
   reminders: Reminder[];
   onAddReminder: () => void;
   onEditReminder: (reminder: Reminder) => void;
@@ -33,18 +33,18 @@ export function TimeSection({
   onEditReminder,
   onDeleteReminder,
 }: TimeSectionProps) {
-  const completedCount = reminders.filter((r) => r.isCompleted).length;
+  const completedCount = reminders.filter((r) => r.lastCompleted).length;
   const totalCount = reminders.length;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`rounded-xl border-l-4 pl-4 py-6 ${timeSlotColors[title]} modern-shadow`}
+      className={`rounded-xl border-l-4 pl-4 py-6 ${timeSlotColors[title as keyof typeof timeSlotColors]} modern-shadow`}
     >
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 px-4">
         <div className="flex items-center gap-3">
-          <span className="text-3xl sm:text-4xl">{timeSlotEmojis[title]}</span>
+          <span className="text-3xl sm:text-4xl">{timeSlotEmojis[title as keyof typeof timeSlotEmojis]}</span>
           <div>
             <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-gray-100">
               {title}
@@ -55,14 +55,14 @@ export function TimeSection({
           </div>
         </div>
 
-        <Button
+        {/* <Button
           onClick={onAddReminder}
           size="sm"
           className="w-full sm:w-auto bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg transition-all duration-200"
         >
           <Plus className="h-4 w-4 mr-1" />
           Add Reminder
-        </Button>
+        </Button> */}
       </div>
 
       <div className="space-y-4 px-4">
@@ -83,7 +83,7 @@ export function TimeSection({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {reminders.map((reminder) => (
                 <ReminderCard
-                  key={reminder.id}
+                  key={reminder._id} 
                   reminder={reminder}
                   onEdit={onEditReminder}
                   onDelete={onDeleteReminder}
